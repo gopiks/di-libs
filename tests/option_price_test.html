@@ -1,0 +1,11 @@
+ <script src="../math/norm_dist.js"></script> 
+ <script src="../finance/black-scholes.js"></script> 
+ <script>
+	S=100;
+	K=120
+	r=0.1
+	v=0.1
+	t=2
+	alert(JSON.stringify([call_price(S,K,r,v,t),put_price(S,K,r,v,t),option_price('Call',S,K,r,v,t),option_price('Put',S,K,r,v,t),IV('Call',S,K,r,t,6.5),IV('Put',S,K,r,t,6.5)]));
+ 
+ </script>
