@@ -17,17 +17,10 @@ function call_price(S,K,r,v,t) {
 
 function put_price(S,K,r,v,t) { 
   var sqt = Math.sqrt(t);
-  var Nd2;  //N(d2), used often
-  var nd1;  //n(d1), also used often
-  var ert;  //e(-rt), ditto
-  var delta;  //The delta of the option
- 
   d1 = (Math.log(S/K) + r*t)/(v*sqt) + 0.5*(v*sqt);
-  d2 = d1 - (v*sqt);
- 
+  d2 = d1 - (v*sqt); 
   delta = normalcdf(d1)-1;
-  Nd2 = -normalcdf(-d2);
- 
+  Nd2 = -normalcdf(-d2); 
   ert = Math.exp(-r*t);
   nd1 = ndist(d1);
   result={}
@@ -35,8 +28,7 @@ function put_price(S,K,r,v,t) {
   result['gamma'] = nd1/(S*v*sqt);
   result['vega'] = S*sqt*nd1;
   result['theta'] = -(S*v*nd1)/(2*sqt) - r*K*ert*Nd2;
-  result['rho'] = K*t*ert*Nd2;
- 
+  result['rho'] = K*t*ert*Nd2; 
   return ( result);
  
 } //end of black_scholes put
