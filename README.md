@@ -1,5 +1,5 @@
 # libs
-Libraries that can be used on mappy platform directly
+Libraries that can be used on mappy platform directly. These libraries can also be used directly is web/node applications as well.
 
 There will be a common set of js libraries that can be pulled directly into mappy. The libs will be categorised into:
 1. ml (Machine learning)
