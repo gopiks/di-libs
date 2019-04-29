@@ -1,3 +1,19 @@
+function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
+	var T=1/(1+.2316419*Math.abs(X));
+	var D=.3989423*Math.exp(-X*X/2);
+	var Prob=D*T*(.3193815+T*(-.3565638+T*(1.781478+T*(-1.821256+T*1.330274))));
+	if (X>0) {
+		Prob=1-Prob
+	}
+	return Prob
+}   
+
+function ndist(z) {
+  return (1.0/(Math.sqrt(2*Math.PI)))*Math.exp(-0.5*z);
+  //??  Math.exp(-0.5*z*z)
+}
+
+
 function call_price(S,K,r,v,t) { 
   var sqt = Math.sqrt(t);
   d1 = (Math.log(S/K) + r*t)/(v*sqt) + 0.5*(v*sqt);
