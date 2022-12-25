@@ -8,27 +8,26 @@ function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 	return Prob
 }   
 
-function ndist(z) {
+ndist=function(z) {
   return (1.0/(Math.sqrt(2*Math.PI)))*Math.exp(-0.5*z);
   //??  Math.exp(-0.5*z*z)
 }
 
 function n(Z,M,SD) {
 
-    with (Math) {
-		if (SD<0) {
-			alert("The standard deviation must be nonnegative.")
-		} else if (SD==0) {
-		    if (Z<M){
-		        Prob=0
-		    } else {
-			    Prob=1
-			}
-		} else {
-			Prob=normalcdf((Z-M)/SD);
-			Prob=round(100000*Prob)/100000;
+	if (SD<0) {
+		alert("The standard deviation must be nonnegative.")
+	} else if (SD==0) {
+	    if (Z<M){
+	        Prob=0
+	    } else {
+		    Prob=1
 		}
+	} else {
+		Prob=normalcdf((Z-M)/SD);
+		Prob=Math.round(100000*Prob)/100000;
 	}
+
     form.result.value = Prob;
 }
 
