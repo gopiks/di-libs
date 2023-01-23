@@ -42,3 +42,5 @@ nrand = function() {
 	var c = Math.sqrt(-2 * Math.log(rad) / rad);	
 	return x1 * c;
 }
+
+export normalcdf;
