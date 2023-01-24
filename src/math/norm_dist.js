@@ -1,4 +1,4 @@
-export {normalcdf,ndist};
+export {normalcdf};
 function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 	var T=1/(1+.2316419*Math.abs(X));
 	var D=.3989423*Math.exp(-X*X/2);
