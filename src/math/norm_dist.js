@@ -9,7 +9,7 @@ function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 	return Prob
 }   
 
-ndist=function(z) {
+const ndist=function(z) {
   return (1.0/(Math.sqrt(2*Math.PI)))*Math.exp(-0.5*z);
   //??  Math.exp(-0.5*z*z)
 };
@@ -33,7 +33,7 @@ function n(Z,M,SD) {
 }
 
 
-nrand = function() {
+const nrand = function() {
 	var x1, x2, rad, y1;
 	do {
 		x1 = 2 * Math.random() - 1;
