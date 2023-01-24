@@ -1,3 +1,4 @@
+export {normalcdf,ndist};
 function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 	var T=1/(1+.2316419*Math.abs(X));
 	var D=.3989423*Math.exp(-X*X/2);
@@ -11,7 +12,7 @@ function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 ndist=function(z) {
   return (1.0/(Math.sqrt(2*Math.PI)))*Math.exp(-0.5*z);
   //??  Math.exp(-0.5*z*z)
-}
+};
 
 function n(Z,M,SD) {
 
@@ -41,5 +42,5 @@ nrand = function() {
 	} while(rad >= 1 || rad == 0);	
 	var c = Math.sqrt(-2 * Math.log(rad) / rad);	
 	return x1 * c;
-}
+};
 
