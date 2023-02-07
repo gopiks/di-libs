@@ -1,4 +1,4 @@
-function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
+var normalcdf=function(X){   //HASTINGS.  MAX ERROR = .000001
 	var T=1/(1+.2316419*Math.abs(X));
 	var D=.3989423*Math.exp(-X*X/2);
 	var Prob=D*T*(.3193815+T*(-.3565638+T*(1.781478+T*(-1.821256+T*1.330274))));
@@ -8,13 +8,14 @@ function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
 	return Prob
 }   
 
-function ndist(z) {
+var ndist=function(z) {
   return (1.0/(Math.sqrt(2*Math.PI)))*Math.exp(-0.5*z);
   //??  Math.exp(-0.5*z*z)
 }
 
+var black_scholes = {};
 
-function call_price(S,K,r,v,t) { 
+black_scholes.call_price=function(S,K,r,v,t) { 
   var sqt = Math.sqrt(t);
   d1 = (Math.log(S/K) + r*t)/(v*sqt) + 0.5*(v*sqt);
   d2 = d1 - (v*sqt);
@@ -31,7 +32,7 @@ function call_price(S,K,r,v,t) {
   return (result );
 } //end of black_scholes call
 
-function put_price(S,K,r,v,t) { 
+black_scholes.put_price=function(S,K,r,v,t) { 
   var sqt = Math.sqrt(t);
   d1 = (Math.log(S/K) + r*t)/(v*sqt) + 0.5*(v*sqt);
   d2 = d1 - (v*sqt); 
@@ -49,7 +50,7 @@ function put_price(S,K,r,v,t) {
  
 } //end of black_scholes put
 
-function option_price(option_type,S,K,r,v,t){
+black_scholes.option_price=function(option_type,S,K,r,v,t){
 	if (option_type == 'CE' || option_type == 'Call' || option_type == 'C'){
 		return call_price(S,K,r,v,t);
 	}else if (option_type == 'PE' || option_type == 'Put' || option_type == 'P'){
@@ -57,7 +58,7 @@ function option_price(option_type,S,K,r,v,t){
 	}
 }
 
-function IV(option_type,S,K,r,t,P){
+black_scholes.IV=function(option_type,S,K,r,t,P){
 	upper_bound=2;
 	lower_bound=0;
 	p_estimate=option_price(option_type,S,K,r,(lower_bound+upper_bound)/2.0,t)['price'];
@@ -68,3 +69,6 @@ function IV(option_type,S,K,r,t,P){
 	}
 	return (lower_bound+upper_bound)/2.0;
 }
+
+if(window!=undefined)
+	window.black_scholes=black_scholes;

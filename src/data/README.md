@@ -1,4 +1,4 @@
 # TO DO
-- dataframe
-- plots
-- external data connectors
+- dataframe -- use Array instead of dataframe
+- plots -- Modify Array prototype
+- external data connectors - To do
