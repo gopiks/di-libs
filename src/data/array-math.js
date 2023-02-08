@@ -137,7 +137,7 @@ Array.prototype.transpose = function(){
 
 
 Array.prototype.shape=function(){
-	return [this.length,this.map(x=>x.length).max()];
+	return [this.length,this.map(x=>x.length||0).max()];
 };
 
 Array.prototype.mmult=function(other){
@@ -147,5 +147,38 @@ Array.prototype.mmult=function(other){
        
 	
 };
+
+
+Array.prototype.hist=function(buckets){
+	if(buckets==undefined) var buckets =this.length>30?30:this.length;
+	var hist =[];
+	var min=this.min();
+	var max=this.max();
+	var bucket_size=(max-min)/buckets;
+	var lower=min;
+	for(var i =0;i<buckets;i+=1){
+		higher=lower+bucket_size;
+		hist.push([lower,this.filter(x=>(x>=lower && x<=higher)).length]);
+		lower=higher;
+		
+	}
+	return hist;
+}
+
+Array.prototype.dist=function(buckets){
+	if(buckets==undefined) var buckets =this.length>30?30:this.length;
+	var hist =[];
+	var min=this.min();
+	var max=this.max();
+	var bucket_size=(max-min)/buckets;
+	var lower=min;
+	for(var i =0;i<buckets;i+=1){
+		higher=lower+bucket_size;
+		hist.push([lower,this.filter(x=>(x>=lower && x<=higher)).length/bucket_size/this.length]);
+		lower=higher;
+		
+	}
+	return hist;
+}
 
 })();

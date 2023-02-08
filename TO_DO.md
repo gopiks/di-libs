@@ -7,6 +7,6 @@
 6. Machine Learning (ML): OLS, Logisict, ARIMA, Naive Bayes, SVM, DT, RF, XGB, RNN
 
 My immediate pain point is to use simulation (including agent based simulation) for solving certain problems. For this I need:
-1. random number/path generator
+1. random number/path generator 
 2. Graphical visualization
 3. Agent based modeling framework

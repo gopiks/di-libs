@@ -137,7 +137,7 @@ Array.prototype.transpose = function(){
 
 
 Array.prototype.shape=function(){
-	return [this.length,this.map(x=>x.length).max()];
+	return [this.length,this.map(x=>x.length||0).max()];
 };
 
 Array.prototype.mmult=function(other){
@@ -147,6 +147,39 @@ Array.prototype.mmult=function(other){
        
 	
 };
+
+
+Array.prototype.hist=function(buckets){
+	if(buckets==undefined) var buckets =this.length>30?30:this.length;
+	var hist =[];
+	var min=this.min();
+	var max=this.max();
+	var bucket_size=(max-min)/buckets;
+	var lower=min;
+	for(var i =0;i<buckets;i+=1){
+		higher=lower+bucket_size;
+		hist.push([lower,this.filter(x=>(x>=lower && x<=higher)).length]);
+		lower=higher;
+		
+	}
+	return hist;
+}
+
+Array.prototype.dist=function(buckets){
+	if(buckets==undefined) var buckets =this.length>30?30:this.length;
+	var hist =[];
+	var min=this.min();
+	var max=this.max();
+	var bucket_size=(max-min)/buckets;
+	var lower=min;
+	for(var i =0;i<buckets;i+=1){
+		higher=lower+bucket_size;
+		hist.push([lower,this.filter(x=>(x>=lower && x<=higher)).length/bucket_size/this.length]);
+		lower=higher;
+		
+	}
+	return hist;
+}
 
 })();// Take dataframe as dataframejs or 2D array or X and Y as arrays
 // Following plots:
@@ -159,37 +192,48 @@ Array.prototype.mmult=function(other){
 
 Array.prototype.plot = function(dom,type,params){
   if(params == undefined) params ={};
+  if(dom==undefined) var dom = curr_cell();
+  if(type==undefined) var type='line';
+  if(typeof(dom)=='string') dom = document.getElementById(dom);
+  
   new_div=document.createElement("div");
   new_div.id='plot_'+(Math.random() + 1).toString(36).substring(7);
   dom.appendChild(new_div);
+  
+  
   if(type=='line' || type=='bar' ){
-  	if(params['name']!=undefined) var name=params['name'];
-  	else if(params['names']!=undefined) var name=String(params['names']);
-	var data=[{"y":this,type:type,name:name}];
+  	var name=params['name'] || String(params['names']);
+  	var shape=this.shape();
+  	if(shape[1]>1 && shape[0]>1)
+		var data=[{"y":this[1],x:this[0],type:type,name:name}];
+	else
+		var data=[{"y":this,type:type,name:name}];
 	
 	Plotly.newPlot(new_div, data,params['layout']);
 	
-
   }
-  if(type=='multiline'){
+  if(type=='multi-line' || type=='multi-bar'){
   
   	var data=[];
   	
-  	if(params['names']!=undefined) var names=params['names'];
+  	var names=params['names'] || [];
   	
 	
   	this.forEach(l=>{
-  		if(names!=undefined && names.length>0)
-			data.push({"y":l,type:'line',name:names.shift()});
-		else
-			data.push({"y":l,type:'line'});
+  		var shape=l.shape();
+  		if(shape[0]>1 && shape[1]>1)
+  		 	data.push({"y":l[1],x:l[0],type:type.replace("multi-",""),name:names.shift()});
+  		else
+  		 	data.push({"y":l[1],x:l[0],type:type.replace("multi-",""),name:names.shift()});
+		
 	});
 	Plotly.newPlot(new_div, data,params['layout']);
 
   }
   if(type=='scatter'){
-    	if(params['name']!=undefined) var name=params['name'];
-  	else if(params['names']!=undefined) var name=String(params['names']);
+  	var shape=this.shape();
+  	if(shape[0]<=1 || shape[1] <= 1) throw("Need a two arrays for scatter");
+    	var name=params['name'] || String(params['names']);
 	var data=[{y:this[1],x:this[0],type:type,name:name}];
 	
 	Plotly.newPlot(new_div, data,params['layout']);
@@ -197,9 +241,8 @@ Array.prototype.plot = function(dom,type,params){
   }
   if(type=='multi-scatter'){
     	var data=[];
-  	
-  	if(params['names']!=undefined) var names=params['names'];
-  	
+
+  	var names=params['names'] || [];  	
 	
   	this.forEach(l=>{
   		if(names!=undefined && names.length>0)
@@ -212,6 +255,29 @@ Array.prototype.plot = function(dom,type,params){
   }
   return new_div.id;  
 }
+
+
+Array.prototype.to_html = function(columns,index){
+	var thead="";
+	var tbody="<tbody>";
+	var shape=this.shape();
+	if(shape[1]==0) throw("Not a 2d Array");
+	if(columns!=undefined && columns.length==shape[1]) 
+	  thead="<thead><tr><th></th>"+columns.map(x=>"<th>"+x+"</th>").join("")+"</tr></thead>"
+	if(index==undefined) var index=this.map(row=>"<th>"+"</th>");
+	else {
+		if(index.length!=shape[0]) throw("Index is not same length as the data");
+		else index=index.map(idx=>"<th>"+idx+"</th>");
+	}
+	this.forEach(row=>{
+		tbody+="<tr>"+index.shift()+row.map(val=>"<td>"+val+"</td>").join("")+"</tr>"
+	});
+	tbody+="</tbody>";
+	console.log("<table>"+thead+tbody+"</table>");
+	return "<table>"+thead+tbody+"</table>";
+	
+}
+
 
 
 var normalcdf=function(X){   //HASTINGS.  MAX ERROR = .000001
