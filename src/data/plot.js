@@ -15,6 +15,7 @@ Array.prototype.plot = function(dom,type,params){
   
   new_div=document.createElement("div");
   new_div.id='plot_'+(Math.random() + 1).toString(36).substring(7);
+  new_div.classList.add('di-plot');
   dom.appendChild(new_div);
   
   
@@ -91,7 +92,7 @@ Array.prototype.to_html = function(columns,index){
 	});
 	tbody+="</tbody>";
 	console.log("<table>"+thead+tbody+"</table>");
-	return "<table>"+thead+tbody+"</table>";
+	return "<table class='di-table'>"+thead+tbody+"</table>";
 	
 }
 
