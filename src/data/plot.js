@@ -15,7 +15,7 @@ Array.prototype.plot = function(dom,type,params){
   
   new_div=document.createElement("div");
   new_div.id='plot_'+(Math.random() + 1).toString(36).substring(7);
-  new_div.classList.add('di-plot');
+  
   dom.appendChild(new_div);
   
   
@@ -71,6 +71,7 @@ Array.prototype.plot = function(dom,type,params){
 	Plotly.newPlot(new_div, data,params['layout']);
   
   }
+  new_div.classList.add('di-plot');
   return new_div.id;  
 }
 
