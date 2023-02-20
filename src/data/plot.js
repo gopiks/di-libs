@@ -6,6 +6,7 @@
 // scatter([{x:,y:}],layout)
 //. Returns html.
 
+(()=>{
 
 Array.prototype.plot = function(dom,type,params){
   if(params == undefined) params ={};
@@ -96,6 +97,8 @@ Array.prototype.to_html = function(columns,index){
 	return "<table class='di-table'>"+thead+tbody+"</table>";
 	
 }
+
+})();
 
 
 

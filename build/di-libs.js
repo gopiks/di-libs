@@ -174,7 +174,7 @@ Array.prototype.dist=function(buckets){
 	var lower=min;
 	for(var i =0;i<buckets;i+=1){
 		higher=lower+bucket_size;
-		hist.push([lower,this.filter(x=>(x>=lower && x<=higher)).length/bucket_size/this.length]);
+		hist.push([(lower+higher)/2,this.filter(x=>(x>=lower && x<=higher)).length/bucket_size/this.length]);
 		lower=higher;
 		
 	}
@@ -189,6 +189,7 @@ Array.prototype.dist=function(buckets){
 // scatter([{x:,y:}],layout)
 //. Returns html.
 
+(()=>{
 
 Array.prototype.plot = function(dom,type,params){
   if(params == undefined) params ={};
@@ -279,6 +280,8 @@ Array.prototype.to_html = function(columns,index){
 	return "<table class='di-table'>"+thead+tbody+"</table>";
 	
 }
+
+})();
 
 
 
@@ -1707,7 +1710,7 @@ if(window!=undefined)
 single random_nromal var
 array of random normal var
 */
-
+((){
 if(random==undefined) 
 	var random ={};
 	
@@ -1728,3 +1731,4 @@ if(window!=undefined)
 
 
 
+})();
