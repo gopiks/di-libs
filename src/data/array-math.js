@@ -181,4 +181,59 @@ Array.prototype.dist=function(buckets){
 	return hist;
 }
 
+Array.prototype.ma =function(window){
+
+}
+
+Grouper = function(groups,original_shape){
+
+	this.groups=groups;
+
+  this.shape=original_shape;
+  this.agg= function(ag){
+  	
+
+		if(this.shape[1]==0) {
+		  var result = { };
+
+		  Object.keys(groups).forEach(key=> {
+			result[key] = ag(groups[key]);
+		  });
+		  return result;
+		}
+		else if(this.shape[1]>0) {
+		  var result = { };
+
+		  Object.keys(groups).forEach(key=> {
+
+			result[key] = groups[key].transpose().map(ag);
+		  });
+		  return result;
+		}
+	}
+}
+
+Array.prototype.groupby = function(by){
+	if(by.length!=this.length) throw("By array and this array should have same length");
+	var unique = by.filter((value, index, array) => array.indexOf(value) === index);
+	var groups={};
+
+	for(var i=0;i<by.length;i+=1){
+
+		if(groups[by[i]] == undefined) groups[by[i]] = [];
+	   groups[by[i]].push(this[i]);
+	}
+	var grouper = new Grouper(groups,this.shape());
+	
+	return grouper;
+}
+
+window.sum=x=>x.sum();
+window.mean=x=>x.mean();
+window.stdev=x=>x.stdev();
+window.min=x=>x.min();
+window.max=x=>x.max();
+window.count=x=>x.length;
+
+
 })();

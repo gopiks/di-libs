@@ -181,6 +181,61 @@ Array.prototype.dist=function(buckets){
 	return hist;
 }
 
+Array.prototype.ma =function(window){
+
+}
+
+Grouper = function(groups,original_shape){
+
+	this.groups=groups;
+
+  this.shape=original_shape;
+  this.agg= function(ag){
+  	
+
+		if(this.shape[1]==0) {
+		  var result = { };
+
+		  Object.keys(groups).forEach(key=> {
+			result[key] = ag(groups[key]);
+		  });
+		  return result;
+		}
+		else if(this.shape[1]>0) {
+		  var result = { };
+
+		  Object.keys(groups).forEach(key=> {
+
+			result[key] = groups[key].transpose().map(ag);
+		  });
+		  return result;
+		}
+	}
+}
+
+Array.prototype.groupby = function(by){
+	if(by.length!=this.length) throw("By array and this array should have same length");
+	var unique = by.filter((value, index, array) => array.indexOf(value) === index);
+	var groups={};
+
+	for(var i=0;i<by.length;i+=1){
+
+		if(groups[by[i]] == undefined) groups[by[i]] = [];
+	   groups[by[i]].push(this[i]);
+	}
+	var grouper = new Grouper(groups,this.shape());
+	
+	return grouper;
+}
+
+window.sum=x=>x.sum();
+window.mean=x=>x.mean();
+window.stdev=x=>x.stdev();
+window.min=x=>x.min();
+window.max=x=>x.max();
+window.count=x=>x.length;
+
+
 })();// Take dataframe as dataframejs or 2D array or X and Y as arrays
 // Following plots:
 // pie(X,Y, layout). 
@@ -234,7 +289,7 @@ Array.prototype.plot = function(dom,type,params){
   }
   if(type=='scatter'){
   	var shape=this.shape();
-  	if(shape[0]<=1 || shape[1] <= 1) throw("Need a two arrays for scatter");
+  	if(shape[0]<=1 || shape[1] <= 1) throw("Need two arrays for scatter");
     	var name=params['name'] || String(params['names']);
 	var data=[{y:this[1],x:this[0],type:type,name:name}];
 	
@@ -252,6 +307,14 @@ Array.prototype.plot = function(dom,type,params){
 		else
 			data.push({y:l[1],x:l[0],type:'scatter'});
 	});
+	Plotly.newPlot(new_div, data,params['layout']);
+  
+  }
+  if(type=='contour'){
+  	if(this.length<3) throw("Need three arrays for scatter");
+    	var name=params['name'] || String(params['names']) || "Contour";
+	var data=[{y:this[1],x:this[0],z:this[2],type:type,name:name}];
+	
 	Plotly.newPlot(new_div, data,params['layout']);
   
   }
@@ -1686,6 +1749,8 @@ norm_dist.nrand = function() {
 	return x1 * c;
 };
 
+/* functions to upload files to p2p.. network and download.
+It is a layer on top of Webtorrents/ipfs-js etc */
 /*
 brownian montion
 */
@@ -1710,7 +1775,7 @@ if(window!=undefined)
 single random_nromal var
 array of random normal var
 */
-((){
+(()=>{
 if(random==undefined) 
 	var random ={};
 	

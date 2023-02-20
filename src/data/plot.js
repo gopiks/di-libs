@@ -51,7 +51,7 @@ Array.prototype.plot = function(dom,type,params){
   }
   if(type=='scatter'){
   	var shape=this.shape();
-  	if(shape[0]<=1 || shape[1] <= 1) throw("Need a two arrays for scatter");
+  	if(shape[0]<=1 || shape[1] <= 1) throw("Need two arrays for scatter");
     	var name=params['name'] || String(params['names']);
 	var data=[{y:this[1],x:this[0],type:type,name:name}];
 	
@@ -69,6 +69,14 @@ Array.prototype.plot = function(dom,type,params){
 		else
 			data.push({y:l[1],x:l[0],type:'scatter'});
 	});
+	Plotly.newPlot(new_div, data,params['layout']);
+  
+  }
+  if(type=='contour'){
+  	if(this.length<3) throw("Need three arrays for scatter");
+    	var name=params['name'] || String(params['names']) || "Contour";
+	var data=[{y:this[1],x:this[0],z:this[2],type:type,name:name}];
+	
 	Plotly.newPlot(new_div, data,params['layout']);
   
   }
