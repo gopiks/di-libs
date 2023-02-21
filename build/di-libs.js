@@ -1751,6 +1751,8 @@ norm_dist.nrand = function() {
 
 /* functions to upload files to p2p.. network and download.
 It is a layer on top of Webtorrents/ipfs-js etc */
+/** tools for discovering peers.. including interacting with stun servers **/
+/** Files for computing map-reduce jobs on p2p framework **/
 /*
 brownian montion
 */
