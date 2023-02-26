@@ -235,6 +235,9 @@ window.min=x=>x.min();
 window.max=x=>x.max();
 window.count=x=>x.length;
 
+window.range = (start, stop, step = 1) =>
+  Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step);
+
 
 })();// Take dataframe as dataframejs or 2D array or X and Y as arrays
 // Following plots:
