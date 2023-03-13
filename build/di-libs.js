@@ -249,7 +249,7 @@ window.range = (start, stop, step = 1) =>
 
 (()=>{
 
-Array.prototype.plot = function(dom,type,params){
+Array.prototype.plot = function(type,dom,params){
   if(params == undefined) params ={};
   if(dom==undefined) var dom = curr_cell();
   if(type==undefined) var type='line';
@@ -351,6 +351,8 @@ Array.prototype.to_html = function(columns,index){
 	return "<table class='di-table'>"+thead+tbody+"</table>";
 	
 }
+
+
 
 })();
 
