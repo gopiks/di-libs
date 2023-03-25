@@ -24,7 +24,7 @@ Array.prototype.plot = function(type,dom,params){
   if(type=='line' || type=='bar' ){
   	var name=params['name'] || String(params['names']);
   	var shape=this.shape();
-  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[1]>1 && shape[0]>1)
 		var data=[{"y":this[1],x:this[0],type:type,name:name}];
 	else
@@ -53,7 +53,7 @@ Array.prototype.plot = function(type,dom,params){
   }
   if(type=='scatter'){
   	var shape=this.shape();
-  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[0]<=1 || shape[1] <= 1) throw("Need two arrays for scatter");
     	var name=params['name'] || String(params['names']);
 	var data=[{y:this[1],x:this[0],type:type,name:name}];
@@ -77,7 +77,7 @@ Array.prototype.plot = function(type,dom,params){
   }
   if(type=='contour'){
   	var shape=this.shape();
-  	if(shape[1]==3 && shape[0]>3) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==3 && shape[0]>3) return this.transpose().plot(type,dom,params);
   	if(shape[0] != 3) throw("Need three arrays for contour");
     	var name=params['name'] || String(params['names']) || "Contour";
 	var data=[{y:this[1],x:this[0],z:this[2],type:type,name:name}];

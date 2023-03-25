@@ -265,7 +265,7 @@ Array.prototype.plot = function(type,dom,params){
   if(type=='line' || type=='bar' ){
   	var name=params['name'] || String(params['names']);
   	var shape=this.shape();
-  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[1]>1 && shape[0]>1)
 		var data=[{"y":this[1],x:this[0],type:type,name:name}];
 	else
@@ -294,7 +294,7 @@ Array.prototype.plot = function(type,dom,params){
   }
   if(type=='scatter'){
   	var shape=this.shape();
-  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[0]<=1 || shape[1] <= 1) throw("Need two arrays for scatter");
     	var name=params['name'] || String(params['names']);
 	var data=[{y:this[1],x:this[0],type:type,name:name}];
@@ -318,7 +318,7 @@ Array.prototype.plot = function(type,dom,params){
   }
   if(type=='contour'){
   	var shape=this.shape();
-  	if(shape[1]==3 && shape[0]>3) return this.transpose().plot(dom,type,params);
+  	if(shape[1]==3 && shape[0]>3) return this.transpose().plot(type,dom,params);
   	if(shape[0] != 3) throw("Need three arrays for contour");
     	var name=params['name'] || String(params['names']) || "Contour";
 	var data=[{y:this[1],x:this[0],z:this[2],type:type,name:name}];
@@ -412,9 +412,9 @@ black_scholes.put_price=function(S,K,r,v,t) {
 
 black_scholes.option_price=function(option_type,S,K,r,v,t){
 	if (option_type == 'CE' || option_type == 'Call' || option_type == 'C'){
-		return call_price(S,K,r,v,t);
+		return black_scholes.call_price(S,K,r,v,t);
 	}else if (option_type == 'PE' || option_type == 'Put' || option_type == 'P'){
-		return put_price(S,K,r,v,t);
+		return black_scholes.put_price(S,K,r,v,t);
 	}
 }
 
@@ -1770,13 +1770,11 @@ brownian montion
 if (brownian==undefined) var brownian={};
 
 brownian.time_series=function(length, mu, sigma,start,dist,increment_period){
-	 moves=random.normal.oned(length,mu*increment_period,Math.sqrt(increment_period)*sigma);
+	 moves=random.oned.normal(length,mu*increment_period,Math.sqrt(increment_period)*sigma);
 	 if(dist=='normal'){
 	 	return moves.map((sum => value => sum += value)(start));
 	 }
-	 if(dist=='normal'){
-	 	return moves.map((sum => value => sum += value)(start));
-	 }
+	 
 	 if(dist=='log-normal'){
 	 	return moves.map((sum => value => sum += value)(0)).map(x=>Math.exp(x)*start);
 	 }
@@ -1791,15 +1789,34 @@ array of random normal var
 if(random==undefined) 
 	var random ={};
 	
-random.normal={};
+random.oned={};
 
-random.normal.single=function(mu,sigma){
+random.normal=function(mu,sigma){
 	return norm_dist.nrand()*sigma+mu;
 }
 
-random.normal.oned=function(length,mu,sigma){
+random.oned.normal=function(length,mu,sigma){
 	return Array.from({length: length}, 
-		()=>random.normal.single(mu,sigma)
+		()=>random.normal(mu,sigma)
+	  )
+}
+
+random.oned.uniform=function(length,minimum,maximum){
+	return Array.from({length: length}, 
+		()=>Math.random()*(maximum-minimum)+minimum
+	  )
+}
+random.oned.lognormal=function(length,mu,sigma){
+	return Array.from({length: length}, 
+		()=>Math.exp(random.normal(mu,sigma))
+	  )
+}
+
+random.oned.choice=function(length,choices){
+	l=choices.length;
+
+	return Array.from({length: length}, 
+		()=>choices[Math.floor( l* Math.random())]
 	  )
 }
 

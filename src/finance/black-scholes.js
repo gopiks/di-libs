@@ -52,9 +52,9 @@ black_scholes.put_price=function(S,K,r,v,t) {
 
 black_scholes.option_price=function(option_type,S,K,r,v,t){
 	if (option_type == 'CE' || option_type == 'Call' || option_type == 'C'){
-		return call_price(S,K,r,v,t);
+		return black_scholes.call_price(S,K,r,v,t);
 	}else if (option_type == 'PE' || option_type == 'Put' || option_type == 'P'){
-		return put_price(S,K,r,v,t);
+		return black_scholes.put_price(S,K,r,v,t);
 	}
 }
 
