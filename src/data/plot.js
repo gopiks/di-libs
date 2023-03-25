@@ -106,7 +106,6 @@ Array.prototype.to_html = function(columns,index){
 		tbody+="<tr>"+index.shift()+row.map(val=>"<td>"+val+"</td>").join("")+"</tr>"
 	});
 	tbody+="</tbody>";
-	console.log("<table>"+thead+tbody+"</table>");
 	return "<table class='di-table'>"+thead+tbody+"</table>";
 	
 }

@@ -140,13 +140,7 @@ Array.prototype.shape=function(){
 	return [this.length,this.map(x=>x.length||0).max()];
 };
 
-Array.prototype.mmult=function(other){
-       var left_shape=this.shape;
-       var right_shape=other.shape;
-       if(left_shape[0]!=right_shape[1] || left_shape[1]!=right_shape[0]) throw("Dimension mismatch");
-       
-	
-};
+
 
 
 Array.prototype.hist=function(buckets){
