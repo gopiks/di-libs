@@ -1714,8 +1714,8 @@ Linear Algebra
 -- Matrix multiplication
 -- Determinant
 -- Solve linear eqns/matrix inversion
--- Decomposition
-
+-- Cholesky Decomposition
+-- Eigne decomposition
 
 */
 
@@ -1730,7 +1730,7 @@ Array.prototype.mmult=function(other){
 	
 };
 
-Array.prototype.invert = function(){
+Array.prototype.inverse = function(){
 	shape=this.shape();
 	if(shape[0]!=shape[1]) throw("Matrix has to be square");
 	
