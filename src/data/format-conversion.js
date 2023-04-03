@@ -17,7 +17,7 @@ Array.prototype.to_csv = function(header){
 
 }
 
-Array.prototype.from_csv(csv,start,header){
+Array.prototype.from_csv= function(csv,start,header){
 	lines=csv.split("\n");
 	if(start!=undefined) lines.shift(start);
 	if(header) {h=lines[0];lines.shift(1);}
