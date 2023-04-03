@@ -26,7 +26,7 @@ Array.prototype.plot = function(type,dom,params){
   	var shape=this.shape();
   	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[1]>1 && shape[0]>1)
-		var data=[{"y":this[1],x:this[0],type:type,name:name}];
+		var data=this.map(ln=>({y:ln,'type':type,name:name}));
 	else
 		var data=[{"y":this,type:type,name:name}];
 	

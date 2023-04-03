@@ -43,62 +43,108 @@ Array.prototype.scale =function(type){
 	
 };
 
+const mult=function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => mult(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>mult(x,other));
+	else 
+		return left*other;
+	
+}
 
 Array.prototype.mult = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x*other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]*other[i]);
-	    return result;
-	}
+	return mult(this,other);
 };
+
+const add =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => add(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>add(x,other));
+	else 
+		return left+other;
+	
+}
 
 Array.prototype.add = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x+other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]+other[i]);
-	    return result;
-	}
+	return add(this,other);
 	     
 };
+
+const divide =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => divide(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>divide(x,other));
+	else 
+		return left/other;
+	
+}
 
 Array.prototype.divide = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x/other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]/other[i]);
-	    return result;
-	}
+	return divide(this,other);
 	     
 };
 
+
+const subtract =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => subtract(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>subtract(x,other));
+	else 
+		return left-other;
+	
+}
 
 Array.prototype.subtract = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x-other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]-other[i]);
-	    return result;
-	}
+	return subtract(this,other);
 	     
 };
+
+
+const power =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => power(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>power(x,other));
+	else 
+		return left**other;
+	
+}
 
 Array.prototype.power = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x**other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]**other[i]);
-	    return result;
-	}
+	return power(this,other);
 	     
 };
 
+const exp=function(x){
+	return Array.isArray(x)?x.map(exp):Math.exp(x);
+}
+Array.prototype.exp = function(other){
+	return exp(this);
+	     
+};
+
+const log=function(x){
+	return Array.isArray(x)?x.map(log):Math.log(x);
+}
+Array.prototype.log = function(other){
+	return log(this);
+	     
+};
+
+const square=function(x){
+	return Array.isArray(x)?x.map(square):x*x;
+}
+Array.prototype.square = function(other){
+	return square(this);
+	     
+};
+
+const sqrt=function(x){
+	return Array.isArray(x)?x.map(sqrt):Math.sqrt(x);
+}
+Array.prototype.sqrt = function(other){
+	return sqrt(this);
+	     
+};
 
 Array.prototype.dot = function(other){
 	return this.mult(other).sum();
@@ -175,6 +221,14 @@ Array.prototype.dist=function(buckets){
 	return hist;
 }
 
+
+
+Array.prototype.cummsum=function(){
+	var sum=0;
+	return this.map((sum => value => sum += value)(0));
+}
+
+
 Array.prototype.ma =function(window){
 
 }
@@ -221,6 +275,7 @@ Array.prototype.groupby = function(by){
 	
 	return grouper;
 }
+
 
 window.sum=x=>x.sum();
 window.mean=x=>x.mean();

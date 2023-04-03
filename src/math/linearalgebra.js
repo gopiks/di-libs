@@ -3,9 +3,9 @@
 Linear Algebra
 -- Matrix multiplication
 -- Determinant
--- Solve linear eqns/matrix inversion
+-- Matrix inversion
 -- Cholesky Decomposition
--- Eigne decomposition
+-- Eigen decomposition -- TODO
 
 */
 
@@ -32,7 +32,7 @@ Array.prototype.inverse = function(){
 	
 	  // Create identity matrix
 	  identity=idx.map(i=>idx.map(j=>i==j?1:0));
-	  inverse=idx.map(i=>idx.map(j=>this[i][j]));
+	  copy=idx.map(i=>idx.map(j=>this[i][j]));
 	  
 	  
 	
@@ -40,49 +40,48 @@ Array.prototype.inverse = function(){
 	  for (let i = 0; i < n; i++) {
 	    let maxRow = i;
 	    for (let j = i + 1; j < n; j++) {
-	      if (Math.abs(inverse[j][i]) > Math.abs(inverse[maxRow][i])) {
+	      if (Math.abs(copy[j][i]) > Math.abs(copy[maxRow][i])) {
 	        maxRow = j;
 	      }
 	    }
 	
 	    // Swap rows
-	    const tmp = inverse[i];
-	    inverse[i] = inverse[maxRow];
-	    inverse[maxRow] = tmp;
+	    const tmp = copy[i];
+	    copy[i] = copy[maxRow];
+	    copy[maxRow] = tmp;
 	
 	    const tmp2 = identity[i];
 	    identity[i] = identity[maxRow];
 	    identity[maxRow] = tmp2;
 	
 	    // Check if matrix is singular
-	    if (inverse[i][i] === 0) {
+	    if (copy[i][i] === 0) {
 	      return null;
 	    }
 	
 	    // Scale row
-	    const pivot = inverse[i][i];
+	    const pivot = copy[i][i];
 	    det *= pivot;
 	    for (let j = 0; j < n; j++) {
-	      inverse[i][j] /= pivot;
+	      copy[i][j] /= pivot;
 	      identity[i][j] /= pivot;
 	    }
 	
 	    // Eliminate column
 	    for (let j = 0; j < n; j++) {
 	      if (j !== i) {
-	        const factor = inverse[j][i];
+	        const factor = copy[j][i];
 	        for (let k = 0; k < n; k++) {
-	          inverse[j][k] -= factor * inverse[i][k];
+	          copy[j][k] -= factor * copy[i][k];
 	          identity[j][k] -= factor * identity[i][k];
 	        }
 	      }
 	    }
 	  }
 	
-	  // Inverse is in the right half of identity matrix
+	  // Inverse is in the identity matrix
 	  return identity;
 	
-
 
 }
 
@@ -110,34 +109,17 @@ Array.prototype.determinant=function(){
 	
 }
 
-Array.prototype.cholesky = function(){
-	shape=this.shape();
-	if(shape[0]!=shape[1]) throw("Matrix has to be square");
-	  const n = this.length;
-	  const lowerTriangular = [];
-	idx=range(0,n,1);
-	lowerTriangular=idx.map(i=>idx.map(j=>0));
-	
-	
-	  for (let i = 0; i < n; i++) {
-	    for (let j = 0; j <= i; j++) {
-	      let sum = 0;
-	
-	      for (let k = 0; k < j; k++) {
-	        sum += lowerTriangular[i][k] * lowerTriangular[j][k];
-	      }
-	
-	      if (i === j) {
-	        lowerTriangular[i][j] = Math.sqrt(this[i][i] - sum);
-	      } else {
-	        lowerTriangular[i][j] = (1 / lowerTriangular[j][j]) * (this[i][j] - sum);
-	      }
-	    }
-	  }
-	
-	  return lowerTriangular;
-
-
+const cholesky = function (array) {
+	shape=array.shape()
+	if (shape[0]!=shape[1]) throw("Matrix has to be square");
+	const zeros = [...Array(shape[0])].map( _ => Array(shape[0]).fill(0));
+	const L = zeros.map((row, r, xL) => row.map((v, c) => {
+		const sum = row.reduce((s, _, i) => i < c ? s + xL[r][i] * xL[c][i] : s, 0);
+		return xL[r][c] = c < r + 1 ? r === c ? Math.sqrt(array[r][r] - sum) : (array[r][c] - sum) / xL[c][c] : v;
+	}));
+	return L;
 }
+
+Array.prototype.cholesky=function(){return cholesky(this)}
 
 })();

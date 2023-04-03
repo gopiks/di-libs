@@ -43,62 +43,108 @@ Array.prototype.scale =function(type){
 	
 };
 
+const mult=function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => mult(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>mult(x,other));
+	else 
+		return left*other;
+	
+}
 
 Array.prototype.mult = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x*other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]*other[i]);
-	    return result;
-	}
+	return mult(this,other);
 };
+
+const add =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => add(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>add(x,other));
+	else 
+		return left+other;
+	
+}
 
 Array.prototype.add = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x+other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]+other[i]);
-	    return result;
-	}
+	return add(this,other);
 	     
 };
+
+const divide =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => divide(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>divide(x,other));
+	else 
+		return left/other;
+	
+}
 
 Array.prototype.divide = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x/other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]/other[i]);
-	    return result;
-	}
+	return divide(this,other);
 	     
 };
 
+
+const subtract =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => subtract(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>subtract(x,other));
+	else 
+		return left-other;
+	
+}
 
 Array.prototype.subtract = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x-other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]-other[i]);
-	    return result;
-	}
+	return subtract(this,other);
 	     
 };
+
+
+const power =function(left,other){
+	if (Array.isArray(other)) return left.map((e,i) => power(e , other[i]));
+	if (Array.isArray(left)) 
+		return left.map(x=>power(x,other));
+	else 
+		return left**other;
+	
+}
 
 Array.prototype.power = function(other){
-	if(typeof(other)=='number') 
-		return this.map(x=>x**other);
-	if(Array.isArray(other)){
-	    var result=[];
-	    for(var i=0;i<this.length;i+=1) result.push(this[i]**other[i]);
-	    return result;
-	}
+	return power(this,other);
 	     
 };
 
+const exp=function(x){
+	return Array.isArray(x)?x.map(exp):Math.exp(x);
+}
+Array.prototype.exp = function(other){
+	return exp(this);
+	     
+};
+
+const log=function(x){
+	return Array.isArray(x)?x.map(log):Math.log(x);
+}
+Array.prototype.log = function(other){
+	return log(this);
+	     
+};
+
+const square=function(x){
+	return Array.isArray(x)?x.map(square):x*x;
+}
+Array.prototype.square = function(other){
+	return square(this);
+	     
+};
+
+const sqrt=function(x){
+	return Array.isArray(x)?x.map(sqrt):Math.sqrt(x);
+}
+Array.prototype.sqrt = function(other){
+	return sqrt(this);
+	     
+};
 
 Array.prototype.dot = function(other){
 	return this.mult(other).sum();
@@ -175,6 +221,14 @@ Array.prototype.dist=function(buckets){
 	return hist;
 }
 
+
+
+Array.prototype.cummsum=function(){
+	var sum=0;
+	return this.map((sum => value => sum += value)(0));
+}
+
+
 Array.prototype.ma =function(window){
 
 }
@@ -222,6 +276,7 @@ Array.prototype.groupby = function(by){
 	return grouper;
 }
 
+
 window.sum=x=>x.sum();
 window.mean=x=>x.mean();
 window.stdev=x=>x.stdev();
@@ -233,7 +288,32 @@ window.range = (start, stop, step = 1) =>
   Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step);
 
 
-})();// Take dataframe as dataframejs or 2D array or X and Y as arrays
+})();﻿/*
+Array.to_dict(header=[],orient="records")
+Dict.to_array(orient="records")
+Array.to_csv(header=[])
+
+*/
+
+
+Array.prototype.to_csv = function(header){
+	if (header==undefined)
+	 h="";
+	else h=header.join(",")+"\n";
+	
+	csv=this.map(x=>x.join(",")).join("\n");
+	
+	return h+csv;
+
+}
+
+Array.prototype.from_csv(csv,start,header){
+	lines=csv.split("\n");
+	if(start!=undefined) lines.shift(start);
+	if(header) {h=lines[0];lines.shift(1);}
+	return {header:h,data:lines.map(l=>l.split(","))}
+		
+}// Take dataframe as dataframejs or 2D array or X and Y as arrays
 // Following plots:
 // pie(X,Y, layout). 
 // bar(labels,[Ys],layout)
@@ -261,7 +341,7 @@ Array.prototype.plot = function(type,dom,params){
   	var shape=this.shape();
   	if(shape[1]==2 && shape[0]>2) return this.transpose().plot(type,dom,params);
   	if(shape[1]>1 && shape[0]>1)
-		var data=[{"y":this[1],x:this[0],type:type,name:name}];
+		var data=this.map(ln=>({y:ln,'type':type,name:name}));
 	else
 		var data=[{"y":this,type:type,name:name}];
 	
@@ -1713,9 +1793,9 @@ PicEffects = (function() {
 Linear Algebra
 -- Matrix multiplication
 -- Determinant
--- Solve linear eqns/matrix inversion
+-- Matrix inversion
 -- Cholesky Decomposition
--- Eigne decomposition
+-- Eigen decomposition -- TODO
 
 */
 
@@ -1742,7 +1822,7 @@ Array.prototype.inverse = function(){
 	
 	  // Create identity matrix
 	  identity=idx.map(i=>idx.map(j=>i==j?1:0));
-	  inverse=idx.map(i=>idx.map(j=>this[i][j]));
+	  copy=idx.map(i=>idx.map(j=>this[i][j]));
 	  
 	  
 	
@@ -1750,49 +1830,48 @@ Array.prototype.inverse = function(){
 	  for (let i = 0; i < n; i++) {
 	    let maxRow = i;
 	    for (let j = i + 1; j < n; j++) {
-	      if (Math.abs(inverse[j][i]) > Math.abs(inverse[maxRow][i])) {
+	      if (Math.abs(copy[j][i]) > Math.abs(copy[maxRow][i])) {
 	        maxRow = j;
 	      }
 	    }
 	
 	    // Swap rows
-	    const tmp = inverse[i];
-	    inverse[i] = inverse[maxRow];
-	    inverse[maxRow] = tmp;
+	    const tmp = copy[i];
+	    copy[i] = copy[maxRow];
+	    copy[maxRow] = tmp;
 	
 	    const tmp2 = identity[i];
 	    identity[i] = identity[maxRow];
 	    identity[maxRow] = tmp2;
 	
 	    // Check if matrix is singular
-	    if (inverse[i][i] === 0) {
+	    if (copy[i][i] === 0) {
 	      return null;
 	    }
 	
 	    // Scale row
-	    const pivot = inverse[i][i];
+	    const pivot = copy[i][i];
 	    det *= pivot;
 	    for (let j = 0; j < n; j++) {
-	      inverse[i][j] /= pivot;
+	      copy[i][j] /= pivot;
 	      identity[i][j] /= pivot;
 	    }
 	
 	    // Eliminate column
 	    for (let j = 0; j < n; j++) {
 	      if (j !== i) {
-	        const factor = inverse[j][i];
+	        const factor = copy[j][i];
 	        for (let k = 0; k < n; k++) {
-	          inverse[j][k] -= factor * inverse[i][k];
+	          copy[j][k] -= factor * copy[i][k];
 	          identity[j][k] -= factor * identity[i][k];
 	        }
 	      }
 	    }
 	  }
 	
-	  // Inverse is in the right half of identity matrix
+	  // Inverse is in the identity matrix
 	  return identity;
 	
-
 
 }
 
@@ -1820,35 +1899,18 @@ Array.prototype.determinant=function(){
 	
 }
 
-Array.prototype.cholesky = function(){
-	shape=this.shape();
-	if(shape[0]!=shape[1]) throw("Matrix has to be square");
-	  const n = this.length;
-	  const lowerTriangular = [];
-	idx=range(0,n,1);
-	lowerTriangular=idx.map(i=>idx.map(j=>0));
-	
-	
-	  for (let i = 0; i < n; i++) {
-	    for (let j = 0; j <= i; j++) {
-	      let sum = 0;
-	
-	      for (let k = 0; k < j; k++) {
-	        sum += lowerTriangular[i][k] * lowerTriangular[j][k];
-	      }
-	
-	      if (i === j) {
-	        lowerTriangular[i][j] = Math.sqrt(this[i][i] - sum);
-	      } else {
-	        lowerTriangular[i][j] = (1 / lowerTriangular[j][j]) * (this[i][j] - sum);
-	      }
-	    }
-	  }
-	
-	  return lowerTriangular;
-
-
+const cholesky = function (array) {
+	shape=array.shape()
+	if (shape[0]!=shape[1]) throw("Matrix has to be square");
+	const zeros = [...Array(shape[0])].map( _ => Array(shape[0]).fill(0));
+	const L = zeros.map((row, r, xL) => row.map((v, c) => {
+		const sum = row.reduce((s, _, i) => i < c ? s + xL[r][i] * xL[c][i] : s, 0);
+		return xL[r][c] = c < r + 1 ? r === c ? Math.sqrt(array[r][r] - sum) : (array[r][c] - sum) / xL[c][c] : v;
+	}));
+	return L;
 }
+
+Array.prototype.cholesky=function(){return cholesky(this)}
 
 })();norm_dist={}
 
@@ -1906,12 +1968,37 @@ if (brownian==undefined) var brownian={};
 
 brownian.time_series=function(length, mu, sigma,start,dist,increment_period){
 	 moves=random.oned.normal(length,mu*increment_period,Math.sqrt(increment_period)*sigma);
+	 moves=moves.map((cummulative=> value => cummulative += value)(0));
 	 if(dist=='normal'){
-	 	return moves.map((sum => value => sum += value)(start));
+	 	return moves.add(start);
 	 }
 	 
 	 if(dist=='log-normal'){
-	 	return moves.map((sum => value => sum += value)(0)).map(x=>Math.exp(x)*start);
+	 	return moves.exp().mult(start);
+	 }
+}
+
+brownian.multi_series=function(length, means, covar,starts,dist,increment_period){
+	 shape=covar.shape();
+	 if(shape[0] != shape[1]) throw("Covariance has to be symmetric");
+	 if(means.length!=shape[0]) throw("Number of means should be same as number of variables in covariance");
+	 if(starts.length!=shape[0]) throw("Number of starting values should be same as number of variables in covariance");
+	 n=shape[0];
+	 
+	 
+	 sigma=covar.cholesky().transpose().mult(Math.sqrt(increment_period));
+	 mu=means.mult(increment_period);
+	 moves=random.twod.normal(length,n,0,1);
+	 moves=moves.mmult(sigma).map(x=>x.add(mu));
+	 zeros= starts.map(x=>0);
+	 moves=moves.map((cummulative => row => (cummulative=cummulative.add(row)))(zeros));
+	 if(dist=='normal'){
+	 	return moves.map(x=>x.add(starts));
+	 }
+	 
+	 if(dist=='log-normal'){
+	 	return  moves.map(x=>x.exp().mult(starts));
+	 	
 	 }
 }
 
