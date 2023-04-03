@@ -5,7 +5,7 @@ Array.to_csv(header=[])
 
 */
 
-
+/*
 Array.prototype.to_csv = function(header){
 	if (header==undefined)
 	 h="";
@@ -24,3 +24,5 @@ Array.prototype.from_csv= function(csv,start,header){
 	return {header:h,data:lines.map(l=>l.split(","))}
 		
 }
+
+*/

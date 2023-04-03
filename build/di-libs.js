@@ -295,7 +295,7 @@ Array.to_csv(header=[])
 
 */
 
-
+/*
 Array.prototype.to_csv = function(header){
 	if (header==undefined)
 	 h="";
@@ -313,7 +313,9 @@ Array.prototype.from_csv= function(csv,start,header){
 	if(header) {h=lines[0];lines.shift(1);}
 	return {header:h,data:lines.map(l=>l.split(","))}
 		
-}// Take dataframe as dataframejs or 2D array or X and Y as arrays
+}
+
+*/// Take dataframe as dataframejs or 2D array or X and Y as arrays
 // Following plots:
 // pie(X,Y, layout). 
 // bar(labels,[Ys],layout)
