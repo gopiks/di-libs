@@ -12,7 +12,7 @@ The libs will be categorised into:
 5. Simulation: [https://github.com/gopi-suvanam/di-libs/tree/master/src/simulation](https://github.com/gopi-suvanam/di-libs/tree/master/src/simulation)
 6. Vision (image recognition): To be build
 7. P2P: [https://github.com/gopi-suvanam/di-libs/tree/master/src/p2p](https://github.com/gopi-suvanam/di-libs/tree/master/src/p2p)
-8. AR/VR in the browser: To be buil
+8. AR/VR in the browser: To be built
 9. Speech recognition/processing in the browser
 
 
